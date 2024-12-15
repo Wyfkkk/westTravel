@@ -2,14 +2,17 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-12-12 15:23:00
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2024-12-12 15:23:16
+ * @LastEditTime: 2024-12-13 18:08:53
  * @FilePath: \backend\account\login.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 登录逻辑
  */
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
 
 router.post('/login', (req, res) => {
 	const md5 = crypto.createHash('md5');
@@ -45,4 +48,42 @@ router.post('/login', (req, res) => {
 	});
 });
 
-module.exports = router;
+
+let verificationCodes = {}; // 存储验证码
+
+// 邮件发送设置
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_SERVICE === 'qq' ? 'smtp.qq.com' : 'smtp.163.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+// 发送验证码的路由
+router.post('/send-verification-code', (req, res) => {
+  console.log(111)
+  const { email } = req.body;
+  const verificationCode = crypto.randomBytes(3).toString('hex'); // 生成随机验证码
+
+  // 将验证码存储在内存中
+  verificationCodes[email] = verificationCode;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USERNAME,
+    to: email,
+    subject: 'Your Verification Code',
+    text: `Your verification code is: ${verificationCode}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error, 'error');
+      return res.status(500).send('Error sending email');
+    }
+    res.status(200).send('Verification code sent!');
+  });
+});
+
+module.exports = router
