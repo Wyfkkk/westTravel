@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-12-12 15:23:00
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2024-12-13 18:08:53
+ * @LastEditTime: 2024-12-31 07:56:58
  * @FilePath: \backend\account\login.js
  * @Description: 登录逻辑
  */
@@ -11,20 +11,37 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 
+const jwt = require('jsonwebtoken');
+router.post('/login', async (req, res) => {
+	//const md5 = crypto.createHash('md5');
+	
+	const { email, emailCode, password} = req.body;
 
-router.post('/login', (req, res) => {
-	const md5 = crypto.createHash('md5');
-	const loginMsg = req.body;
-	const phone = loginMsg.phone;
-	const pwd = md5.update(loginMsg.pwd).digest('hex');
-
-	let p = new Promise((resolve, reject) => {
-		db('select id,user_name from tour_user where user_phone="'+ phone +'" and user_pwd="'+pwd +'"', (error, data) => {
-			data ? resolve(data) : reject(error);
-		});
-	});
+  console.log(req.body ,'req')
+  let p = new Promise((resolve, reject) => {
+    const sql = `SELECT id, username, password FROM node_user WHERE email = ?`
+    db.query(sql, [email], async (error, data) => {
+        if (error) {
+            reject(error); // 如果出现错误，拒绝 Promise
+        } else {
+          console.log(data, 'data');
+          const user = data[0];
+          const match = await bcrypt.compare(password, user.password); // 验证密码
+          const SECRET_KEY = 'wyf666'
+          if (match) {
+            const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+            return res.json({ token, message: '登录成功' });
+              // res.status(200).json({ message: '登录成功' });
+          } else {
+              res.status(400).json({ message: '密码错误' });
+          }
+            resolve(data); // 如果查询成功，解析 Promise
+        }
+    });
+});
 
 	// 0:用户不存在		1:登录成功		2:登录失败
 	p.then((data) => {
@@ -33,17 +50,20 @@ router.post('/login', (req, res) => {
 			res.json({
                 backInfo: '0'
             });
+            return
 		} else if (len === 1) {
 			res.json({
 				backInfo: '1',
 				id: data[0].id,
 				name: data[0].name,
-				phone: phone
+				// phone: phone
 			});
+      return
 		} else {
 			res.json({
 				backInfo: '2'
 			});
+      return
 		}
 	});
 });
@@ -63,7 +83,7 @@ const transporter = nodemailer.createTransport({
 });
 // 发送验证码的路由
 router.post('/send-verification-code', (req, res) => {
-  console.log(111)
+  console.log(req.body, '邮箱请求体')
   const { email } = req.body;
   const verificationCode = crypto.randomBytes(3).toString('hex'); // 生成随机验证码
 

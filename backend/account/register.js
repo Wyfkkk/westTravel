@@ -1,16 +1,24 @@
+/*
+ * @Author: Wyfkkk 2224081986@qq.com
+ * @Date: 2024-12-16 01:48:09
+ * @LastEditors: Wyfkkk 2224081986@qq.com
+ * @LastEditTime: 2024-12-16 15:28:56
+ * @FilePath: \毕业设计\backend\account\register.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 const express = require('express');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2');
-
+const db = require('../db')
 const router = express.Router();
 
 // 创建 MySQL 连接
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root', // 根据你的 MySQL 用户名
-  password: 'wang010504', // 根据你的 MySQL 密码
-  database: 'my_news_test'
-});
+// const db = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root', // 根据你的 MySQL 用户名
+//   password: 'wang010504', // 根据你的 MySQL 密码
+//   database: 'my_news_test'
+// });
 
 // 注册用户
 router.post('/register', async (req, res) => {
