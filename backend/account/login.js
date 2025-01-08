@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-12-12 15:23:00
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2024-12-31 07:56:58
+ * @LastEditTime: 2025-01-02 00:38:04
  * @FilePath: \backend\account\login.js
  * @Description: 登录逻辑
  */
@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
           const SECRET_KEY = 'wyf666'
           if (match) {
             const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-            return res.json({ token, message: '登录成功' });
+            return res.json({ user, token, message: '登录成功' });
               // res.status(200).json({ message: '登录成功' });
           } else {
               res.status(400).json({ message: '密码错误' });
