@@ -1,7 +1,7 @@
-.container {
+.box {
     display: flex;
     justify-content: center;
-   
+    height: 10%;
     .title {
 
         line-height: 38px;
@@ -12,6 +12,10 @@
         left: 600px;
     }
     .regBtn {
+        position: relative;
+        left: 600px;
+    }
+    .userInfo {
         position: relative;
         left: 600px;
     }

@@ -12,7 +12,6 @@ import Cookies from 'js-cookie'
 
 export function middlewareToken(req) {
   // 从请求的 cookies 或 headers 中获取 token
-//   const token = req.cookies.get('token')?.value || req.headers.get('Authorization');
   const token = req.cookies.get('token') || req.headers.get('Authorization');
   // 定义需要保护的路由
   const protectedRoutes = ['/front'];

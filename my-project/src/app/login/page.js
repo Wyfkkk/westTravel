@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-11-30 16:15:57
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2025-01-08 23:51:43
+ * @LastEditTime: 2025-01-13 12:06:58
  * @FilePath: \my-project\src\app\login\page.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -39,7 +39,6 @@ export default function Login({ children }) {
     try {
       const res = await api.login(values)
       Cookies.set('token', res.token, { expires: 1 }); // 1 天有效期
-      
       dispatch(setUserInfoValue(res.user));
       setLoading(false);
       router.push("/front"); 
