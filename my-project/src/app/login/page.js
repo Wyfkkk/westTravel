@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-11-30 16:15:57
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2025-01-13 12:06:58
+ * @LastEditTime: 2025-02-14 12:21:01
  * @FilePath: \my-project\src\app\login\page.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -24,9 +24,11 @@ export default function Login({ children }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [form] = Form.useForm();
   let getCode = async () => {
-    let res = await api.getEmailCode();
+    let email = form.getFieldValue('email')
+    console.log(email, 'email')
+    let res = await api.getEmailCode(email);
     return;
   }
 
@@ -62,7 +64,7 @@ export default function Login({ children }) {
         </Button>
        
         {error && <p className="error-message">{error}</p>}
-        <Form name="login" onFinish={onFinish} layout="vertical">
+        <Form name="login" onFinish={onFinish} form={form} layout="vertical">
           <Form.Item
             label="用户邮箱"
             name="email"

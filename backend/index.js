@@ -24,6 +24,8 @@ app.use(express.json());
 app.use('/api', routes); // 所有子路由前缀为 /api
 app.use('/api', login)
 app.use('/api', register)
+
+app.use(express.static('public/images'))
 // 启动服务器
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

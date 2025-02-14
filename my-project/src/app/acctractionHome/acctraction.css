@@ -1,0 +1,12 @@
+.homePage {
+    width: 90%;
+    height: 100%;
+    border: 1px solid black;
+    margin: auto;
+    margin-top: 50px;
+    .searchBox {
+        height: 100px;
+        background-color: red;
+       
+    }
+}

@@ -2,6 +2,9 @@
     display: flex;
     justify-content: center;
     height: 10%;
+    .btnBox {
+        display: flex;
+    }
     .title {
 
         line-height: 38px;
@@ -19,4 +22,11 @@
         position: relative;
         left: 600px;
     }
+    .btnBox {
+        margin-left: 100px;
+    }
+}
+.box Button {
+    height: 53px;
+    margin-top: 0px;
 }

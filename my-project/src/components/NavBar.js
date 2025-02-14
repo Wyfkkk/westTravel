@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-12-03 15:33:40
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2025-01-12 23:39:17
+ * @LastEditTime: 2025-01-15 23:33:05
  * @FilePath: \my-project\src\components\NavBar.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,24 +23,9 @@ export default function NavBar() {
   const router = useRouter();
   const value = useSelector((state) => state.userInfo.value);
   console.log(value, 'value') 
-  const items = [
-    {
-      label: "热门景点",
-      key: "hotPlace",
-    },
-    {
-      label: "热门活动",
-      key: "hotActive",
-    },
-    {
-      label: "热门住宿",
-      key: "hotHotel",
-    },
-  ];
 
-  const onClick = (e) => {
-    setCurrent(e.key); // 当 tab 被点击时，更新当前选中的 tab
-  };
+
+
   const token = Cookies.get('token')
   const toLogin = (e) => {
     router.push('/login')
@@ -61,13 +46,22 @@ export default function NavBar() {
 
   return (
     <div className="box">
-      {/* <div className="title"> <a ><Title level={2}>西部旅游网</Title></a></div> */}
-      <Menu
+      <div className="title"> <a ><Title level={2}>西部旅游网</Title></a></div>
+      {/* <Menu
         onClick={onClick}
         selectedKeys={[current]} // 通过 current 来决定选中的 tab
         mode="horizontal"
         items={items}
-      />
+      /> */}
+      <div className="btnBox">
+      <Button type="text" onClick={() => {router.push('/acctractionHome')}}>景点</Button>
+      <Button type="text" onClick={() => {router.push('/')}}>攻略区</Button>
+      <Button type="text" onClick={() => {router.push('/')}}>酒店</Button>
+      <Button type="text" onClick={() => {router.push('/')}}>我的订单</Button>
+      <Button type="text" onClick={() => {router.push('/')}}>订单详情</Button>
+      <Button type="text" onClick={() => {router.push('/')}}>公告通知</Button>
+      <Button type="text" onClick={() => {router.push('/')}}>内容中心</Button>
+      </div>
       {token ?   <div style={{width: '140px', position: 'absolute', left: '1470px', backgroundColor: 'white'}} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
    
       <Collapse activeKey={activeKey} expandIconPosition="right" bordered={false}>

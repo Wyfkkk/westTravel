@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-12-12 15:23:00
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2025-01-14 23:59:43
+ * @LastEditTime: 2025-02-14 12:25:18
  * @FilePath: \backend\account\login.js
  * @Description: 登录逻辑
  */
@@ -31,14 +31,25 @@ router.post('/login', async (req, res) => {
         } else {
           console.log(data, 'data')
           const user = data[0];
-          const match = await bcrypt.compare(password, user.password); // 验证密码
           const SECRET_KEY = 'wyf666'
-          if (match) {
-            const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-            return res.json({ user, token, message: '登录成功' });
-             
+          // 首先判断密码是否为空，如果为空则进行验证码登录逻辑
+          if (!password) {
+              if (emailCode && verificationCodes[email] === emailCode) {
+                  const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+                  return res.json({ user, token, message: '登录成功' });
+              } else {
+                  res.status(400).json({ message: '验证码错误' });
+              }
           } else {
-              res.status(400).json({ message: '密码错误' });
+              // 如果密码不为空，则进行密码登录逻辑
+              const match = await bcrypt.compare(password, user.password); // 验证密码
+              
+              if (match) {
+                  const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+                  return res.json({ user, token, message: '登录成功' });
+              } else {
+                  res.status(400).json({ message: '密码错误' });
+              }
           }
             resolve(data); // 如果查询成功，解析 Promise
         }
