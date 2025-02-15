@@ -17,5 +17,6 @@ import store from '../../store/store';
 export default function Front() {
   const [res, setRes] = useState('')
   const value = useSelector((state) => state.userInfo.value);
-  return (<NavBar></NavBar>)
+  return;
+  // return (<NavBar></NavBar>)
 }

@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-12-12 15:23:00
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2025-02-14 12:25:18
+ * @LastEditTime: 2025-02-14 12:47:03
  * @FilePath: \backend\account\login.js
  * @Description: 登录逻辑
  */
@@ -175,8 +175,7 @@ router.post('/uploads',function(req,res){
       // 地址回显
       data.imgUrl = 'http://127.0.0.1:3000/uploads/' + data.filename
       // 返回图片
-      res.send({
-          code:201,
+      res.status(201).json({
           msg:'上传成功',
           data
       });
