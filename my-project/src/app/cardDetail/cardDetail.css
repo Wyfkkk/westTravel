@@ -52,13 +52,52 @@
   color: #333;
   font-size: 1.1rem;
 }  */
+.container {
+  width: 60%;
+  margin: auto;
+  border: 1px solid black;
+}
+
+.context {
+  width: 100%;
+  background-color: white;
+  padding: 20px;
+}
+
+.menu {
+  margin: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-section {
+  padding: 20px;
+  background-color: white;
+}
+
+.content-container {
+  padding: 20px;
+  min-height: 300px;
+  background-color: white;
+}
+
+.detail-content, .rating-content, .ticket-content {
+  padding: 15px;
+}
+
+.detail-content h3 {
+  margin: 15px 0;
+  color: #333;
+}
+
+.detail-content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* 如果需要响应式设计 */
+@media (max-width: 768px) {
   .container {
-    width: 60%;
-    margin: auto;
-    border: 1px solid black;
-    .context {
-        width: 100%;
-        height: 500px;
-        background-color:grey;
-    }
+    width: 90%;
   }
+}

@@ -3,7 +3,7 @@
   * @Author: Wyfkkk 2224081986@qq.com
   * @Date: 2024-11-30 16:15:57
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2024-12-31 08:05:04
+ * @LastEditTime: 2025-02-18 00:10:20
   * @FilePath: \my-project\src\app\login\page.js
   * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
   */
@@ -43,11 +43,6 @@
       console.log(res, 'res');
       setLoading(false);
       router.push("/login"); 
-       // 模拟登录成功
-       // setTimeout(() => {
-       //   setLoading(false);
-       //   router.push("/"); 
-       // }, 1000);
      } catch (err) {
        setLoading(false);
        setError("注册失败，请重试。");

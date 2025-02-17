@@ -2,13 +2,13 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-11-30 16:15:57
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2025-02-14 12:21:01
+ * @LastEditTime: 2025-02-17 23:45:19
  * @FilePath: \my-project\src\app\login\page.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 "use client";
 import { useState } from "react";
-import { Form, Input, Button, Typography } from "antd";
+import { Form, Input, Button, Typography, message } from "antd";
 import { useRouter } from "next/navigation";
 import { SwapOutlined } from '@ant-design/icons'
 import api from "../../api/account/index";
@@ -18,6 +18,7 @@ import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
 import { setUserInfoValue } from '../../store/reducers/userReducer';
 export default function Login({ children }) {
+  const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
   const { Title } = Typography;
   const [type, setType] = useState(true);
@@ -43,10 +44,13 @@ export default function Login({ children }) {
       Cookies.set('token', res.token, { expires: 1 }); // 1 天有效期
       dispatch(setUserInfoValue(res.user));
       setLoading(false);
-      router.push("/front"); 
+      router.push("/acctractionHome"); 
+      messageApi.success('登陆成功');
     } catch (err) {
       setLoading(false);
       setError("登录失败，请重试。");
+      console.log(message, 'msg')
+      messageApi.error('登陆失败');
     }
   };
   const toRegister = () => {
@@ -56,6 +60,7 @@ export default function Login({ children }) {
   return (
     
     <div className="container">
+      {contextHolder}
       <div className="login-form">
         <Title level={2}>登录</Title>
         <Button type="text" onClick={() => setType(!type)}>
