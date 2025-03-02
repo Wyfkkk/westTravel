@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-12-12 12:18:05
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2025-01-21 13:54:23
+ * @LastEditTime: 2025-03-01 17:10:04
  * @FilePath: \my-project\src\api\test\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,7 +19,6 @@ import axiosInstance from '../index.js';
 //   }
 // };
 const getEmailCode = async (email) => {
-  console.log(email, 'email');
   try {
     const res = await axiosInstance.post('/send-verification-code', {
       email,

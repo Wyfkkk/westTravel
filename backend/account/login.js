@@ -2,7 +2,7 @@
  * @Author: Wyfkkk 2224081986@qq.com
  * @Date: 2024-12-12 15:23:00
  * @LastEditors: Wyfkkk 2224081986@qq.com
- * @LastEditTime: 2025-02-14 12:47:03
+ * @LastEditTime: 2025-03-01 14:45:42
  * @FilePath: \backend\account\login.js
  * @Description: 登录逻辑
  */
@@ -18,98 +18,96 @@ const nodemailer = require('nodemailer');
 let Busboy = require('busboy');
 
 const jwt = require('jsonwebtoken');
+const User = require('../model/User');  // 引入 User 模型
+
 router.post('/login', async (req, res) => {
-	//const md5 = crypto.createHash('md5');
-	
-	const { email, emailCode, password} = req.body;
+	const { email, emailCode, password } = req.body;
 
-  let p = new Promise((resolve, reject) => {
-    const sql = `SELECT id, username, password, email, isAdmin, avatar FROM node_user WHERE email = ?`
-    db.query(sql, [email], async (error, data) => {
-        if (error) {
-            reject(error); // 如果出现错误，拒绝 Promise
-        } else {
-          console.log(data, 'data')
-          const user = data[0];
-          const SECRET_KEY = 'wyf666'
-          // 首先判断密码是否为空，如果为空则进行验证码登录逻辑
-          if (!password) {
-              if (emailCode && verificationCodes[email] === emailCode) {
-                  const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-                  return res.json({ user, token, message: '登录成功' });
-              } else {
-                  res.status(400).json({ message: '验证码错误' });
-              }
-          } else {
-              // 如果密码不为空，则进行密码登录逻辑
-              const match = await bcrypt.compare(password, user.password); // 验证密码
-              
-              if (match) {
-                  const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-                  return res.json({ user, token, message: '登录成功' });
-              } else {
-                  res.status(400).json({ message: '密码错误' });
-              }
-          }
-            resolve(data); // 如果查询成功，解析 Promise
-        }
-    });
+	try {
+		// 查找用户
+		const user = await User.findOne({
+			where: { email },
+			attributes: ['id', 'username', 'password', 'email', 'isAdmin', 'avatar']
+		});
+
+		if (!user) {
+			return res.status(400).json({ message: '用户不存在' });
+		}
+
+		const SECRET_KEY = 'wyf666';
+
+		// 验证码登录
+		if (!password) {
+			if (emailCode && verificationCodes[email] === emailCode) {
+				const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+				return res.json({ 
+					user: user.toJSON(), 
+					token, 
+					message: '登录成功' 
+				});
+			} else {
+				return res.status(400).json({ message: '验证码错误' });
+			}
+		}
+
+		// 密码登录
+		const match = await bcrypt.compare(password, user.password);
+		if (match) {
+			const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+			return res.json({ 
+				user: user.toJSON(), 
+				token, 
+				message: '登录成功' 
+			});
+		} else {
+			return res.status(400).json({ message: '密码错误' });
+		}
+
+	} catch (error) {
+		console.error('登录错误:', error);
+		return res.status(500).json({ message: '服务器错误' });
+	}
 });
 
-	// 0:用户不存在		1:登录成功		2:登录失败
-	// p.then((data) => {
-	// 	const len = data.length;
-	// 	if (len === 0) {
-	// 		res.json({
-  //               backInfo: '0'
-  //           });
-  //           return
-	// 	} else if (len === 1) {
-	// 		res.json({
-	// 			backInfo: '1',
-	// 			id: data[0].id,
-	// 			name: data[0].name,
-	// 			// phone: phone
-	// 		});
-  //     return
-	// 	} else {
-	// 		res.json({
-	// 			backInfo: '2'
-	// 		});
-  //     return
-	// 	}
-	// });
-});
+// 添加Promise的处理
 
 // 添加修改用户资料的接口
 router.put('/update-info', async (req, res) => {
-  const { id, username, email, avatar } = req.body;
+	const { id, username, email, avatar } = req.body;
 
-  if (!id) {
-      return res.status(400).json({ message: '用户ID不能为空' });
-  }
+	try {
+		if (!id) {
+			return res.status(400).json({ message: '用户ID不能为空' });
+		}
 
-  const sql = `UPDATE node_user SET username = ?, email = ?, avatar = ? WHERE id = ?`;
-  db.query(sql, [username, email, avatar, id], (error, result) => {
-      if (error) {
-          console.error(error);
-          return res.status(500).json({ message: '更新用户资料失败' });
-      }
-      if (result.affectedRows === 0) {
-          return res.status(404).json({ message: '用户未找到' });
-      }
+		// 更新用户信息
+		const [updateCount] = await User.update({
+			username,
+			email,
+			avatar
+		}, {
+			where: { id }
+		});
 
-      // 查询更新后的用户信息
-      const selectSql = `SELECT id, username, email, avatar, isAdmin FROM node_user WHERE id = ?`;
-      db.query(selectSql, [id], (selectError, selectResult) => {
-          if (selectError) {
-              console.error(selectError);
-              return res.status(500).json({ message: '获取用户信息失败' });
-          }
-          const updatedUser = selectResult[0];
-          res.json({ message: '用户资料更新成功', user: updatedUser });
-      });
-  });
+		if (updateCount === 0) {
+			return res.status(404).json({ message: '用户未找到' });
+		}
+
+		// 查询更新后的用户信息
+		const updatedUser = await User.findOne({
+			where: { id },
+			attributes: ['id', 'username', 'email', 'avatar', 'isAdmin']
+		});
+
+		res.json({ 
+			message: '用户资料更新成功', 
+			user: updatedUser 
+		});
+
+	} catch (error) {
+		console.error('更新用户资料错误:', error);
+		res.status(500).json({ message: '更新用户资料失败' });
+	}
 });
 let verificationCodes = {}; // 存储验证码
 

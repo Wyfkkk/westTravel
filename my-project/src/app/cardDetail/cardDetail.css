@@ -101,3 +101,50 @@
     width: 90%;
   }
 }
+
+/* 使用更具体的选择器避免冲突 */
+.card-detail-container {
+  width: 60%;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+}
+
+.card-detail-container .context {
+  width: 100%;
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-detail-container .basic-info {
+  margin-bottom: 20px;
+}
+
+.card-detail-container .basic-info .image-container {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  margin: 10px 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.card-detail-container .tabs-section {
+  margin-top: 20px;
+}
+
+/* 评论区样式 */
+.card-detail-container .comment-section {
+  padding: 20px 0;
+}
+
+.card-detail-container .ant-tabs-content {
+  padding: 20px 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .card-detail-container {
+    width: 90%;
+  }
+}

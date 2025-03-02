@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { List, Avatar, Form, Button, Input, Card, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
+import styles from './CommentSection.module.css';  // 创建新的 CSS 模块文件
 const { TextArea } = Input;
 
 const CommentList = ({ comments, onReply }) => (
@@ -161,9 +162,9 @@ const CommentSection = () => {
   };
 
   return (
-    <div className="comment-section">
+    <div className={styles.commentSection}>
       {contextHolder}
-      <Card style={{ marginBottom: 16 }}>
+      <Card className={styles.editorCard}>
         <Editor
           onChange={handleChange}
           onSubmit={handleSubmit}

@@ -1,14 +1,17 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+
 import { useEffect, useState } from "react";
 import "./cardDetail.css";
+
 import { EnvironmentOutlined, PushpinOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 import { Typography, Tag, Button, Menu, Tabs  } from "antd";
 import CommentSection from '@/components/CommentSection';
+import Rating from "@/components/rating";
 const { Title } = Typography;
 export default function CardDetail() {
   const [isCollect, setIsCollect] = useState(false);
   const [cardDetail, setCardDetail] = useState(null);
+  const baseUrl = 'http://localhost:8000';
    // 切换menu
    const items = [
     {
@@ -24,12 +27,7 @@ export default function CardDetail() {
     {
       label: '景点评分',
       key: 'rating',
-      children: (
-        <div className="rating-content">
-          <h3>景点评分</h3>
-          {/* 这里可以添加评分组件 */}
-        </div>
-      ),
+      children: <Rating/>,
     },
     {
       key: 'ticket',
@@ -68,36 +66,45 @@ export default function CardDetail() {
   }
  
   return (
-    <div className="container">
+    <div className="card-detail-container">
       <div className="context">
-        <div>
-          <Title level={2}>{cardDetail.title}</Title>
+        <div className="basic-info">
+          <Title level={2}>{cardDetail.name}</Title>
+          <div className="image-container" style={{ position: 'relative', width: '300px', height: '200px' }}>
+            <img 
+              src={`${baseUrl}${cardDetail.image_url}`} 
+              alt={cardDetail.name}
+              fill
+              style={{ objectFit: 'cover' }}
+              sizes="(max-width: 768px) 100vw, 300px"
+            />
+          </div>
+          <div className="location">
+            <EnvironmentOutlined />
+            {cardDetail.location}
+          </div>
+          <div className="meta-info">
+            <span>发布时间: {cardDetail.createdAt}</span>
+            <span>收藏({cardDetail.collect}) 浏览({cardDetail.visitCount})</span>
+          </div>
+          <div className="tags">
+            {cardDetail.provider} <Tag color="blue">{cardDetail.tag}</Tag>
+          </div>
+          <Button 
+            icon={isCollect ? <StarFilled /> : <StarOutlined />}
+            onClick={chooseCollect}
+            style={{ color: isCollect ? '#faad14' : undefined }}
+          >
+            {isCollect ? '取消收藏' : '收藏'}
+          </Button>
         </div>
-        <img style={{ width: 300, height: 200 }} src={cardDetail.img}></img>
-        <div>
-          <EnvironmentOutlined></EnvironmentOutlined>
-          {cardDetail.position}
-        </div>
-        <div>发布时间: {cardDetail.time} </div>
-        <div>
-          收藏({cardDetail.collect}) 浏览({cardDetail.view})
-        </div>
-        <div>
-          {cardDetail.provider} <Tag color="blue">{cardDetail.tag}</Tag>
-        </div>
-        <Button 
-          icon={isCollect ? <StarFilled /> : <StarOutlined />}
-          onClick={chooseCollect}
-          style={{ color: isCollect ? '#faad14' : undefined }}
-        >
-          {isCollect ? '取消收藏' : '收藏'}
-        </Button>
       </div>
-      <div className="menu">
-        <Tabs  
+      
+      <div className="tabs-section">
+        <Tabs 
           defaultActiveKey="detail"
           items={items} 
-          onChange={onChange} 
+          onChange={onChange}
         />
       </div>
     </div>

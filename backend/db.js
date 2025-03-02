@@ -18,48 +18,23 @@ const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize('my_news_test', 'root', 'wang010504', {
     host: 'localhost',
-    dialect: 'mysql', // 指定数据库类型为 MySQL
+    dialect: 'mysql',
+    logging: console.log,  // 开启 SQL 日志
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    },
+    define: {
+        timestamps: true,  // 默认为所有模型添加时间戳
+        underscored: true  // 使用下划线命名法
+    }
 });
 
-// 连接到数据库
-// connection.connect(err => {
-//     if (err) {
-//         console.error('连接失败: ', err.stack);
-//         return;
-//     }
-//     console.log('已连接到数据库');
+// 测试连接
+sequelize.authenticate()
+    .then(() => console.log('数据库连接成功'))
+    .catch(err => console.error('数据库连接失败:', err));
 
-//    // 依次执行 SQL 语句
-//     // const sql = [
-//     //     "SET FOREIGN_KEY_CHECKS=0;",
-//     //     "DROP TABLE IF EXISTS node_user;",
-//     //     `CREATE TABLE node_user (
-//     //         id INT(11) NOT NULL AUTO_INCREMENT,
-//     //         username VARCHAR(30) DEFAULT NULL,
-//     //         password VARCHAR(255) DEFAULT NULL,
-//     //         email VARCHAR(18) DEFAULT NULL,
-//     //         avatar VARCHAR(255) DEFAULT NULL,
-//     //         isAdmin BOOLEAN DEFAULT FALSE,
-//     //         PRIMARY KEY (id) 
-//     //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
-//     //     "INSERT INTO node_user (id, username, password, email, avatar, isAdmin) VALUES (1, '王宇飞', '123456', '2224081986@qq.com', 'https://ts4.cn.mm.bing.net/th?id=OIP-C.IykEwu6UUNOvq9LFU0d3kwAAAA&w=226&h=226&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2', true);",
-//     //     "INSERT INTO node_user (id, username, password, email, avatar, isAdmin) VALUES (2, '盘回头', '123456', '2324081986@qq.com', 'https://ts4.cn.mm.bing.net/th?id=OIP-C.IykEwu6UUNOvq9LFU0d3kwAAAA&w=226&h=226&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2', false);",
-//     //     "INSERT INTO node_user (id, username, password, email, avatar, isAdmin) VALUES (3, '小刘', '123456', '2222081986@qq.com', 'https://ts4.cn.mm.bing.net/th?id=OIP-C.IykEwu6UUNOvq9LFU0d3kwAAAA&w=226&h=226&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2', false);",
-//     //     "INSERT INTO node_user (id, username, password, email, avatar, isAdmin) VALUES (4, '飞', '123456', '2224011986@qq.com', 'https://ts4.cn.mm.bing.net/th?id=OIP-C.IykEwu6UUNOvq9LFU0d3kwAAAA&w=226&h=226&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2', false);"
-//     // ];
-
-//     // // 执行每个 SQL 语句
-//     // sql.forEach((query, index) => {
-//     //     connection.query(query, (error, results) => {
-//     //         if (error) {
-//     //             console.error(`执行 SQL 语句失败（第 ${index + 1} 条）: `, error);
-//     //             return;
-//     //         }
-//     //         console.log(`SQL 语句执行成功（第 ${index + 1} 条）: `, results);
-//     //     });
-//     // });
-
-//     // 关闭连接
-//     // connection.end();
-// });
 module.exports = sequelize;

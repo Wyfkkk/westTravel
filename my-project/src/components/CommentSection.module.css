@@ -1,0 +1,21 @@
+.commentSection {
+  padding: 20px 0;
+}
+
+.editorCard {
+  margin-bottom: 16px;
+}
+
+.commentCard {
+  margin-bottom: 16px;
+}
+
+.replyList {
+  margin-left: 32px;
+  margin-top: 16px;
+}
+
+.commentMeta {
+  color: #999;
+  font-size: 12px;
+} 
